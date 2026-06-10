@@ -1,0 +1,34 @@
+{
+    "business_id": "demo-dental-001",
+    "business_name": "SmileCare Dental Clinic",
+    "business_type": "dental",
+    "owner_whatsapp": "+919999999999",
+    "services": [
+        "General Checkup",
+        "Teeth Cleaning",
+        "Root Canal",
+        "Tooth Extraction",
+        "Whitening",
+        "Braces Consultation"
+    ],
+    "working_hours": {
+        "monday": "9:00-18:00",
+        "tuesday": "9:00-18:00",
+        "wednesday": "CLOSED",
+        "thursday": "9:00-18:00",
+        "friday": "9:00-18:00",
+        "saturday": "9:00-13:00",
+        "sunday": "CLOSED"
+    },
+    "calcom_username": "smilecare-demo",
+    "calcom_event_type_id": "YOUR_EVENT_TYPE_ID",
+    "greeting_message": "Hi! 👋 Welcome to SmileCare Dental Clinic. I'm your AI assistant. How can I help you today?",
+    "escalation_keywords": ["emergency", "severe pain", "bleeding", "broken tooth", "urgent"],
+    "reminders": {
+        "reminder_24hr": true,
+        "reminder_1hr": true,
+        "post_visit_review": true,
+        "no_show_followup": true
+    },
+    "language": "en"
+}

@@ -1,0 +1,35 @@
+{
+    "business_id": "demo-salon-001",
+    "business_name": "Glamour Studio Salon",
+    "business_type": "salon",
+    "owner_whatsapp": "+919999999999",
+    "services": [
+        "Haircut",
+        "Hair Colour",
+        "Facial",
+        "Manicure",
+        "Pedicure",
+        "Bridal Package",
+        "Hair Smoothening"
+    ],
+    "working_hours": {
+        "monday": "10:00-20:00",
+        "tuesday": "10:00-20:00",
+        "wednesday": "10:00-20:00",
+        "thursday": "10:00-20:00",
+        "friday": "10:00-20:00",
+        "saturday": "9:00-21:00",
+        "sunday": "10:00-18:00"
+    },
+    "calcom_username": "glamour-studio",
+    "calcom_event_type_id": "YOUR_EVENT_TYPE_ID",
+    "greeting_message": "Hi gorgeous! 💅 Welcome to Glamour Studio. Ready for a makeover? Let me help you book!",
+    "escalation_keywords": ["allergic", "reaction", "burning", "emergency"],
+    "reminders": {
+        "reminder_24hr": true,
+        "reminder_1hr": true,
+        "post_visit_review": true,
+        "no_show_followup": false
+    },
+    "language": "en"
+}

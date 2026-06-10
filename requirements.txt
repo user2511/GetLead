@@ -1,0 +1,38 @@
+# API Framework
+fastapi==0.115.0
+uvicorn==0.30.6
+
+# LangGraph + LangChain
+langgraph
+langchain
+langchain-core
+langchain-groq
+groq
+
+# Database
+sqlalchemy==2.0.35
+psycopg[binary]
+alembic==1.13.3
+
+# Twilio
+twilio==9.3.3
+
+# HTTP + Utils
+httpx==0.27.2
+python-dotenv==1.0.1
+pydantic
+pydantic-settings
+
+# Scheduling
+apscheduler==3.10.4
+
+# Monitoring
+langfuse
+
+# Testing + Evals
+pytest==8.3.3
+pytest-asyncio==0.24.0
+braintrust
+
+# Cal.com HTTP calls
+aiohttp

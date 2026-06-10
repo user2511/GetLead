@@ -1,0 +1,34 @@
+{
+    "business_id": "demo-plumber-001",
+    "business_name": "QuickFix Plumbing",
+    "business_type": "plumbing",
+    "owner_whatsapp": "+919999999999",
+    "services": [
+        "Pipe Repair",
+        "Drain Cleaning",
+        "Water Heater Service",
+        "Leak Detection",
+        "Bathroom Fitting",
+        "Emergency Plumbing"
+    ],
+    "working_hours": {
+        "monday": "8:00-20:00",
+        "tuesday": "8:00-20:00",
+        "wednesday": "8:00-20:00",
+        "thursday": "8:00-20:00",
+        "friday": "8:00-20:00",
+        "saturday": "8:00-18:00",
+        "sunday": "9:00-14:00"
+    },
+    "calcom_username": "quickfix-plumbing",
+    "calcom_event_type_id": "YOUR_EVENT_TYPE_ID",
+    "greeting_message": "Hi! 👋 Welcome to QuickFix Plumbing. Need a plumber? I can help you book one fast!",
+    "escalation_keywords": ["flood", "burst pipe", "emergency", "water everywhere", "no water"],
+    "reminders": {
+        "reminder_24hr": true,
+        "reminder_1hr": true,
+        "post_visit_review": true,
+        "no_show_followup": true
+    },
+    "language": "en"
+}
