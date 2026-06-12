@@ -8,7 +8,7 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgresql://leadflow:password@db:5432/leadflow
+      - DATABASE_URL=postgresql+psycopg://leadflow:password@db:5432/leadflow
     volumes:
       - .:/app
     depends_on:

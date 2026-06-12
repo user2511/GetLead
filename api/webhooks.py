@@ -40,7 +40,7 @@ async def whatsapp_webhook(
         )
 
         # Run through LangGraph pipeline
-        response_text = process_message(
+        response_text = await process_message(
             message=message,
             phone_number=phone_number,
             business_config=business_config_dict

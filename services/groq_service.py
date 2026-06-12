@@ -12,7 +12,7 @@ groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 def call_groq(
     system_prompt: str,
     user_message: str,
-    model: str = "llama-3.1-70b-versatile",
+    model: str = "llama-3.3-70b-versatile",
     temperature: float = 0.3,
     max_tokens: int = 500
 ) -> str:

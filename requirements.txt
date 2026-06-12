@@ -27,7 +27,7 @@ pydantic-settings
 apscheduler==3.10.4
 
 # Monitoring
-langfuse
+langfuse==2.53.3
 
 # Testing + Evals
 pytest==8.3.3
@@ -36,3 +36,5 @@ braintrust
 
 # Cal.com HTTP calls
 aiohttp
+
+python-multipart==0.0.20
