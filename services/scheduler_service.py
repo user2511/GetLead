@@ -1,109 +1,128 @@
 import logging
+import os
 from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.date import DateTrigger
-from apscheduler.triggers.interval import IntervalTrigger
 from services.db_service import SessionLocal, get_upcoming_bookings
-from agents.followup_agent import (
-    send_24hr_reminder,
-    send_1hr_reminder,
-    send_review_request,
-    send_noshow_followup
-)
 from models.booking import Booking
 
 logger = logging.getLogger(__name__)
 
 scheduler = BackgroundScheduler(timezone="Asia/Kolkata")
 
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), "../configs/dental_clinic.json")
+
+
+def _get_business_config() -> dict:
+    """Load business config from JSON"""
+    import json
+    with open(CONFIG_PATH) as f:
+        return json.load(f)
+
+
+def _booking_to_dict(booking: Booking) -> dict:
+    """
+    Serialize SQLAlchemy Booking object to plain dict.
+    Needed because APScheduler passes args by value.
+    """
+    return {
+        "id": booking.id,
+        "customer_name": booking.customer_name,
+        "customer_phone": booking.customer_phone,
+        "service": booking.service,
+        "scheduled_at": booking.scheduled_at.isoformat(),
+        "status": booking.status,
+        "calcom_booking_uid": booking.calcom_booking_uid
+    }
+
+
+def _run_followup_job(followup_type: str, booking_dict: dict):
+    """
+    Called by APScheduler at scheduled time.
+    Routes through the full pipeline so everything is traced.
+    """
+    # Import here to avoid circular imports at module load
+    from graph.pipeline import trigger_followup
+
+    logger.info(f"[SCHEDULER] Running job | type={followup_type} | customer={booking_dict.get('customer_name')}")
+
+    trigger_followup(
+        followup_type=followup_type,
+        phone_number=booking_dict["customer_phone"],
+        business_config=_get_business_config(),
+        booking_object=booking_dict
+    )
+
+
 def schedule_booking_reminders(booking: Booking):
     """
-    Schedule all reminders for a confirmed booking.
-    Called immediately after booking is created.
+    Schedule all 4 follow-up jobs for a confirmed booking.
+    Called from booking_node in pipeline immediately after
+    booking is saved to DB.
+
+    Jobs scheduled:
+      24hr   → 24 hours before appointment
+      1hr    → 1 hour before appointment
+      review → 2 hours after appointment
+      noshow → 30 minutes after appointment (check if showed up)
     """
     now = datetime.now()
-    appt_time = booking.scheduled_at
+    appt = booking.scheduled_at
+    booking_dict = _booking_to_dict(booking)
 
-    # 24hr reminder
-    reminder_24hr = appt_time - timedelta(hours=24)
-    if reminder_24hr > now:
+    jobs = [
+        ("24hr",   appt - timedelta(hours=24)),
+        ("1hr",    appt - timedelta(hours=1)),
+        ("review", appt + timedelta(hours=2)),
+        ("noshow", appt + timedelta(minutes=30)),
+    ]
+
+    for followup_type, run_at in jobs:
+        if run_at <= now:
+            logger.info(f"[SCHEDULER] Skipping {followup_type} — time already passed ({run_at})")
+            continue
+
+        job_id = f"{followup_type}_{booking.id}"
+
         scheduler.add_job(
-            func=send_24hr_reminder,
-            trigger=DateTrigger(run_date=reminder_24hr),
-            args=[booking],
-            id=f"24hr_{booking.id}",
+            func=_run_followup_job,
+            trigger=DateTrigger(run_date=run_at),
+            args=[followup_type, booking_dict],
+            id=job_id,
             replace_existing=True
         )
-        logger.info(f"Scheduled 24hr reminder for {booking.customer_name} at {reminder_24hr}")
-
-    # 1hr reminder
-    reminder_1hr = appt_time - timedelta(hours=1)
-    if reminder_1hr > now:
-        scheduler.add_job(
-            func=send_1hr_reminder,
-            trigger=DateTrigger(run_date=reminder_1hr),
-            args=[booking],
-            id=f"1hr_{booking.id}",
-            replace_existing=True
+        logger.info(
+            f"[SCHEDULER] Scheduled {followup_type} for "
+            f"{booking.customer_name} at {run_at}"
         )
-        logger.info(f"Scheduled 1hr reminder for {booking.customer_name} at {reminder_1hr}")
 
-    # Review request (2hrs after appointment)
-    review_time = appt_time + timedelta(hours=2)
-    scheduler.add_job(
-        func=send_review_request,
-        trigger=DateTrigger(run_date=review_time),
-        args=[booking],
-        id=f"review_{booking.id}",
-        replace_existing=True
-    )
-
-    # No-show check (30 mins after appointment)
-    noshow_time = appt_time + timedelta(minutes=30)
-    scheduler.add_job(
-        func=check_and_send_noshow,
-        trigger=DateTrigger(run_date=noshow_time),
-        args=[booking.id],
-        id=f"noshow_{booking.id}",
-        replace_existing=True
-    )
-
-def check_and_send_noshow(booking_id: str):
-    """Check if customer showed up — if not, send follow-up"""
-    db = SessionLocal()
-    try:
-        booking = db.query(Booking).filter(Booking.id == booking_id).first()
-        if booking and booking.status == "CONFIRMED":
-            # Still confirmed = no-show (not marked COMPLETED)
-            booking.status = "NO_SHOW"
-            db.commit()
-            send_noshow_followup(booking)
-    finally:
-        db.close()
 
 def reschedule_all_pending():
     """
-    On startup — reschedule reminders for all upcoming bookings.
-    Handles server restarts gracefully.
+    On app startup — reload all reminders for upcoming bookings.
+    This ensures reminders survive server restarts.
     """
     db = SessionLocal()
     try:
         upcoming = get_upcoming_bookings(db)
+        count = 0
         for booking in upcoming:
             schedule_booking_reminders(booking)
-        logger.info(f"Rescheduled reminders for {len(upcoming)} upcoming bookings")
+            count += 1
+        logger.info(f"[SCHEDULER] Restored reminders for {count} upcoming bookings")
     finally:
         db.close()
 
+
 def start_scheduler():
-    """Start the background scheduler"""
+    """Start APScheduler background thread"""
     scheduler.start()
-    # Reschedule any pending reminders from DB
     reschedule_all_pending()
-    logger.info("✅ APScheduler started")
+    logger.info("✅ Scheduler started and running")
+
 
 def stop_scheduler():
     """Graceful shutdown"""
     if scheduler.running:
-        scheduler.shutdown()
-        logger.info("Scheduler stopped")
+        scheduler.shutdown(wait=False)
+        logger.info("[SCHEDULER] Stopped")
