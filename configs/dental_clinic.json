@@ -21,7 +21,7 @@
         "sunday": "CLOSED"
     },
     "calcom_username": "smilecare-demo",
-    "calcom_event_type_id": "YOUR_EVENT_TYPE_ID",
+    "calcom_event_type_id": "6001827",
     "greeting_message": "Hi! 👋 Welcome to SmileCare Dental Clinic. I'm your AI assistant. How can I help you today?",
     "escalation_keywords": ["emergency", "severe pain", "bleeding", "broken tooth", "urgent"],
     "reminders": {

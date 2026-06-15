@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 GetLead.db
+.env
+*.db
+__pycache__/

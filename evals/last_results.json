@@ -1,0 +1,163 @@
+{
+  "accuracy": 0.9545454545454546,
+  "correct": 21,
+  "total": 22,
+  "threshold": 0.85,
+  "passed": true,
+  "results": [
+    {
+      "input": "Hi I want to book appointment",
+      "expected": "BOOK_APPOINTMENT",
+      "predicted": "BOOK_APPOINTMENT",
+      "correct": true,
+      "confidence": 0.9
+    },
+    {
+      "input": "Can I schedule a checkup for tomorrow?",
+      "expected": "BOOK_APPOINTMENT",
+      "predicted": "BOOK_APPOINTMENT",
+      "correct": true,
+      "confidence": 0.9
+    },
+    {
+      "input": "Book me a slot for teeth cleaning",
+      "expected": "BOOK_APPOINTMENT",
+      "predicted": "BOOK_APPOINTMENT",
+      "correct": true,
+      "confidence": 0.95
+    },
+    {
+      "input": "I need an appointment please",
+      "expected": "BOOK_APPOINTMENT",
+      "predicted": "BOOK_APPOINTMENT",
+      "correct": true,
+      "confidence": 0.9
+    },
+    {
+      "input": "Can I come in this week?",
+      "expected": "BOOK_APPOINTMENT",
+      "predicted": "BOOK_APPOINTMENT",
+      "correct": true,
+      "confidence": 0.8
+    },
+    {
+      "input": "I want to reschedule my Monday appointment",
+      "expected": "RESCHEDULE",
+      "predicted": "RESCHEDULE",
+      "correct": true,
+      "confidence": 0.9
+    },
+    {
+      "input": "Can I change my booking to Friday?",
+      "expected": "RESCHEDULE",
+      "predicted": "RESCHEDULE",
+      "correct": true,
+      "confidence": 0.9
+    },
+    {
+      "input": "Move my appointment please",
+      "expected": "RESCHEDULE",
+      "predicted": "RESCHEDULE",
+      "correct": true,
+      "confidence": 0.9
+    },
+    {
+      "input": "Cancel my appointment",
+      "expected": "CANCEL",
+      "predicted": "CANCEL",
+      "correct": true,
+      "confidence": 0.99
+    },
+    {
+      "input": "I won't be able to make it tomorrow",
+      "expected": "CANCEL",
+      "predicted": "RESCHEDULE",
+      "correct": false,
+      "confidence": 0.8
+    },
+    {
+      "input": "Please cancel my booking",
+      "expected": "CANCEL",
+      "predicted": "CANCEL",
+      "correct": true,
+      "confidence": 0.99
+    },
+    {
+      "input": "What are your timings?",
+      "expected": "FAQ",
+      "predicted": "FAQ",
+      "correct": true,
+      "confidence": 0.9
+    },
+    {
+      "input": "How much does root canal cost?",
+      "expected": "FAQ",
+      "predicted": "FAQ",
+      "correct": true,
+      "confidence": 0.9
+    },
+    {
+      "input": "Where are you located?",
+      "expected": "FAQ",
+      "predicted": "FAQ",
+      "correct": true,
+      "confidence": 0.9
+    },
+    {
+      "input": "What services do you offer?",
+      "expected": "FAQ",
+      "predicted": "FAQ",
+      "correct": true,
+      "confidence": 0.9
+    },
+    {
+      "input": "Do you treat children?",
+      "expected": "FAQ",
+      "predicted": "FAQ",
+      "correct": true,
+      "confidence": 0.9
+    },
+    {
+      "input": "Hello!",
+      "expected": "GREETING",
+      "predicted": "GREETING",
+      "correct": true,
+      "confidence": 0.99
+    },
+    {
+      "input": "Hi there",
+      "expected": "GREETING",
+      "predicted": "GREETING",
+      "correct": true,
+      "confidence": 0.99
+    },
+    {
+      "input": "Good morning",
+      "expected": "GREETING",
+      "predicted": "GREETING",
+      "correct": true,
+      "confidence": 0.99
+    },
+    {
+      "input": "I have severe tooth pain, it's an emergency",
+      "expected": "EMERGENCY",
+      "predicted": "EMERGENCY",
+      "correct": true,
+      "confidence": 0.99
+    },
+    {
+      "input": "Bleeding won't stop urgent help",
+      "expected": "EMERGENCY",
+      "predicted": "EMERGENCY",
+      "correct": true,
+      "confidence": 0.99
+    },
+    {
+      "input": "My child broke a tooth",
+      "expected": "EMERGENCY",
+      "predicted": "EMERGENCY",
+      "correct": true,
+      "confidence": 0.9
+    }
+  ]
+}

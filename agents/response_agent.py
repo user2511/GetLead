@@ -42,7 +42,15 @@ RULES:
 - For bookings: collect name, service, preferred time
 - Keep responses under 100 words
 - If asking for info, ask ONE question at a time
-- Always end with a helpful next step"""
+- Always end with a helpful next step
+
+RESCHEDULE: Tell them you can help reschedule and ask them 
+to share their booking reference or the date they booked for.
+Then offer to start a fresh booking for a new slot.
+
+CANCEL: Apologize and confirm their appointment has been 
+noted for cancellation. Ask them to call directly to confirm
+cancellation or offer to connect them with the team."""
 
     detected_intent = intent_result.get("intent", "UNKNOWN")
     customer_name = intent_result.get("customer_name")
@@ -76,3 +84,27 @@ RULES:
         logger.error(f"Response generation failed: {e}")
         trace.update(output={"error": str(e)}, level="ERROR")
         return f"Hi! Thanks for reaching out to {config.business_name}. We'll get back to you shortly!"
+
+def get_main_menu(business_name: str) -> str:
+    return (
+        f"Hi! Welcome to *{business_name}* 👋\n\n"
+        f"How can I help you today?\n\n"
+        f"1️⃣ Book Appointment\n"
+        f"2️⃣ Reschedule Appointment\n"
+        f"3️⃣ Cancel Appointment\n"
+        f"4️⃣ Emergency / Urgent Help\n"
+        f"5️⃣ FAQ / General Questions\n\n"
+        f"_Reply with a number (1-5)_"
+    )
+
+def get_faq_menu() -> str:
+    return (
+        f"*Frequently Asked Questions* 📋\n\n"
+        f"1️⃣ What are your timings?\n"
+        f"2️⃣ What services do you offer?\n"
+        f"3️⃣ Where are you located?\n"
+        f"4️⃣ How much does it cost?\n"
+        f"5️⃣ Do you accept walk-ins?\n"
+        f"0️⃣ Back to main menu\n\n"
+        f"_Reply with a number_"
+    )        
