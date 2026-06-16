@@ -34,6 +34,19 @@ app.include_router(webhook_router, prefix="/webhook", tags=["Webhooks"])
 from api.dashboard import router as dashboard_router
 app.include_router(dashboard_router, tags=["Dashboard"])
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://leadflow-demo.lovable.app",  # your lovable URL
+        "https://*.lovable.app",
+        "http://localhost:5173",               # local dev
+        "http://localhost:3000",
+        "*"                                    # allow all for now
+    ],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 @app.on_event("startup")
 async def startup():
     logger.info("LeadFlow starting up...")
