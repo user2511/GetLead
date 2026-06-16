@@ -518,7 +518,7 @@ def build_pipeline() -> StateGraph:
     graph.add_node("booking_handler",    booking_node)
     graph.add_node("response_handler",   response_node)
     graph.add_node("escalation_handler", escalation_node)
-    graph.add_node("followup_handler",   followup_node)
+   # graph.add_node("followup_handler",   followup_node)
 
     graph.set_entry_point("intent_classifier")
 
@@ -535,7 +535,7 @@ def build_pipeline() -> StateGraph:
     graph.add_edge("booking_handler",    END)
     graph.add_edge("response_handler",   END)
     graph.add_edge("escalation_handler", END)
-    graph.add_edge("followup_handler",   END)
+  #  graph.add_edge("followup_handler",   END)
 
     compiled = graph.compile()
     logger.info("✅ LangGraph pipeline compiled — 5 nodes active")
