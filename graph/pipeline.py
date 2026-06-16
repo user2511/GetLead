@@ -511,51 +511,37 @@ def route_after_intent(state: LeadFlowState) -> str:
 # ══════════════════════════════════════════════
 
 def build_pipeline() -> StateGraph:
-    """
-    Full pipeline — 5 nodes.
-
-    Customer message flow:
-      intent → [escalation | booking | response] → END
-
-    Scheduled follow-up flow (bypasses graph entirely):
-      followup_node() called directly by trigger_followup()
-    """
     graph = StateGraph(LeadFlowState)
 
-    graph.add_node("intent",     intent_node)
-    graph.add_node("booking",    booking_node)
-    graph.add_node("response",   response_node)
-    graph.add_node("escalation", escalation_node)
-    graph.add_node("followup",   followup_node)
+    # ── Rename nodes to avoid conflict with state keys ──
+    graph.add_node("intent_classifier",  intent_node)
+    graph.add_node("booking_handler",    booking_node)
+    graph.add_node("response_handler",   response_node)
+    graph.add_node("escalation_handler", escalation_node)
+    graph.add_node("followup_handler",   followup_node)
 
-    graph.set_entry_point("intent")
+    graph.set_entry_point("intent_classifier")
 
     graph.add_conditional_edges(
-        "intent",
+        "intent_classifier",
         route_after_intent,
         {
-            "escalation": "escalation",
-            "booking":    "booking",
-            "response":   "response",
+            "escalation": "escalation_handler",
+            "booking":    "booking_handler",
+            "response":   "response_handler",
         }
     )
 
-    graph.add_edge("booking",    END)
-    graph.add_edge("response",   END)
-    graph.add_edge("escalation", END)
-    graph.add_edge("followup",   END)
+    graph.add_edge("booking_handler",    END)
+    graph.add_edge("response_handler",   END)
+    graph.add_edge("escalation_handler", END)
+    graph.add_edge("followup_handler",   END)
 
     compiled = graph.compile()
-    logger.info(
-        "✅ LangGraph pipeline compiled — "
-        "5 nodes: intent / booking / response / escalation / followup"
-    )
+    logger.info("✅ LangGraph pipeline compiled — 5 nodes active")
     return compiled
 
-
 pipeline = build_pipeline()
-
-
 # ══════════════════════════════════════════════
 # PUBLIC ENTRY POINTS
 # ══════════════════════════════════════════════
