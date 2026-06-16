@@ -31,6 +31,8 @@ app.add_middleware(
 
 app.include_router(health_router, tags=["Health"])
 app.include_router(webhook_router, prefix="/webhook", tags=["Webhooks"])
+from api.dashboard import router as dashboard_router
+app.include_router(dashboard_router, tags=["Dashboard"])
 
 @app.on_event("startup")
 async def startup():
